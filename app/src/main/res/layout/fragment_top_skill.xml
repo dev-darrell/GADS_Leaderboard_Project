@@ -5,11 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".TopSkillFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_top_skills"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFC107"
-        android:text="@string/hello_blank_fragment" />
+        android:visibility="invisible"
+        tools:listitem="@layout/top_skill_item_view" />
 
+    <TextView
+        android:id="@+id/top_skill_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </FrameLayout>

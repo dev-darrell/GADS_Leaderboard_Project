@@ -3,14 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#BCB4B4"
+    android:background="#FFFFFF"
     tools:context=".TopLearnersFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_top_learners"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#535151"
-        android:text="@string/hello_blank_fragment" />
+        android:visibility="invisible"
+        tools:listitem="@layout/top_learner_item_view" />
 
+    <TextView
+        android:id="@+id/top_learn_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </FrameLayout>

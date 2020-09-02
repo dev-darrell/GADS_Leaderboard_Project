@@ -20,4 +20,6 @@
     <string name="email_hint">Email Address</string>
     <string name="project_link_hint">Project on GitHub (link)</string>
     <string name="submit">Submit</string>
+    <string name="project_submission">Project Submission</string>
+    <string name="skill_badge_description">Top Skill IQ Badge</string>
 </resources>
