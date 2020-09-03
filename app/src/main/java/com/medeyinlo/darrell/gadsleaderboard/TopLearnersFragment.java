@@ -1,12 +1,23 @@
 package com.medeyinlo.darrell.gadsleaderboard;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.medeyinlo.darrell.gadsleaderboard.adapter.HourRecyclerViewAdapter;
+import com.medeyinlo.darrell.gadsleaderboard.api.HourLearner;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +25,8 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class TopLearnersFragment extends Fragment {
+    private static final String TAG = "TopLearnersFragment";
+    public static RecyclerView mHourRecyclerView;
 
 //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,16 +62,38 @@ public class TopLearnersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_learners, container, false);
+        View view = inflater.inflate(R.layout.fragment_top_learners, container, false);
+        loadRecyclerView(view);
+        loadDataFromApi();
+        return view;
+    }
+
+    private void loadDataFromApi() {
+        Call<List<HourLearner>> call = MainActivity.mLeaderboardApiService.hourLearners();
+
+        call.enqueue(new Callback<List<HourLearner>>() {
+            @Override
+            public void onResponse(Call<List<HourLearner>> call, Response<List<HourLearner>> response) {
+                List<HourLearner> hourLearners = response.body();
+                TopLearnersFragment.mHourRecyclerView.setAdapter(new HourRecyclerViewAdapter(hourLearners));
+            }
+
+            @Override
+            public void onFailure(Call<List<HourLearner>> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.toString(), t);
+            }
+        });
+    }
+
+    private void loadRecyclerView(View view) {
+        mHourRecyclerView = view.findViewById(R.id.top_hours_recyclerview);
+        mHourRecyclerView.setHasFixedSize(true);
+        mHourRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 }

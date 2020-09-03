@@ -1,12 +1,23 @@
 package com.medeyinlo.darrell.gadsleaderboard;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.medeyinlo.darrell.gadsleaderboard.adapter.SkillRecyclerViewAdapter;
+import com.medeyinlo.darrell.gadsleaderboard.api.SkillLearner;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,15 +25,8 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class TopSkillFragment extends Fragment {
-
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
+    private static final String TAG = "TopSkillFragment";
+    public static RecyclerView mSkillRecyclerView;
 
     public TopSkillFragment() {
         // Required empty public constructor
@@ -31,9 +35,10 @@ public class TopSkillFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
+     * <p>
+     * param1 Parameter 1.
+     * param2 Parameter 2.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment TopSkillFragment.
      */
 
@@ -59,6 +64,32 @@ public class TopSkillFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_skill, container, false);
+        View view = inflater.inflate(R.layout.fragment_top_skill, container, false);
+        loadRecyclerViewLayout(view);
+        getDataFromApi();
+        return view;
+    }
+
+    private void getDataFromApi() {
+        Call<List<SkillLearner>> skillCall = MainActivity.mLeaderboardApiService.skillLearners();
+
+        skillCall.enqueue(new Callback<List<SkillLearner>>() {
+            @Override
+            public void onResponse(Call<List<SkillLearner>> call, Response<List<SkillLearner>> response) {
+                List<SkillLearner> skillLearners = response.body();
+                TopSkillFragment.mSkillRecyclerView.setAdapter(new SkillRecyclerViewAdapter(skillLearners));
+            }
+
+            @Override
+            public void onFailure(Call<List<SkillLearner>> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.toString(), t);
+            }
+        });
+    }
+
+    private void loadRecyclerViewLayout(View view) {
+        mSkillRecyclerView = view.findViewById(R.id.recyclerview_top_skills);
+        mSkillRecyclerView.setHasFixedSize(true);
+        mSkillRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 }

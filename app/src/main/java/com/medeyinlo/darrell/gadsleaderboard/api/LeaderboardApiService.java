@@ -8,7 +8,7 @@ import retrofit2.http.GET;
 public interface LeaderboardApiService {
 
     @GET("/api/hours")
-    Call<List<HourLearner>> HourLearners();
+    Call<List<HourLearner>> hourLearners();
 
     @GET("/api/skilliq")
     Call<List<SkillLearner>> skillLearners();

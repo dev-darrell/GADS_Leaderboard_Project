@@ -3,17 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".TopSkillFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_top_skills"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         tools:listitem="@layout/top_skill_item_view" />
 
-    <TextView
-        android:id="@+id/top_skill_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 </FrameLayout>
