@@ -2,7 +2,6 @@ package com.medeyinlo.darrell.gadsleaderboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
     private Retrofit mRetrofit;
     public static LeaderboardApiService mLeaderboardApiService;
 
+//    TODO: Debug and fix skill fragment not showing RecyclerView and items when loaded;
+//    TODO: Debug RecyclerView item list not having spacing and elevation when displayed in live app;
+//    TODO: Review launcher icon to remove white border that shows in phone app drawer.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         Button submitBtn = findViewById(R.id.submit_btn);
 
-        submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), SubmitActivity.class));
-            }
-        });
+        submitBtn.setOnClickListener(view -> startActivity(new Intent(
+                getApplicationContext(), SubmitActivity.class)));
     }
 
     private void connectAndGetData() {

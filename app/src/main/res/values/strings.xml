@@ -22,4 +22,6 @@
     <string name="submit">Submit</string>
     <string name="project_submission">Project Submission</string>
     <string name="skill_badge_description">Top Skill IQ Badge</string>
+    <string name="fill_all_fields">Please fill all fields</string>
+    <string name="submit_success_dialog_message">Submission Successful</string>
 </resources>
