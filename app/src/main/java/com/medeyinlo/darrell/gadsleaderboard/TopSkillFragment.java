@@ -27,6 +27,7 @@ import retrofit2.Response;
 public class TopSkillFragment extends Fragment {
     private static final String TAG = "TopSkillFragment";
     public static RecyclerView mSkillRecyclerView;
+    public static SkillRecyclerViewAdapter mMySkillAdapter;
 
     public TopSkillFragment() {
         // Required empty public constructor
@@ -77,7 +78,8 @@ public class TopSkillFragment extends Fragment {
             @Override
             public void onResponse(Call<List<SkillLearner>> call, Response<List<SkillLearner>> response) {
                 List<SkillLearner> skillLearners = response.body();
-                TopSkillFragment.mSkillRecyclerView.setAdapter(new SkillRecyclerViewAdapter(skillLearners));
+                mMySkillAdapter = new SkillRecyclerViewAdapter(skillLearners);
+
             }
 
             @Override

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/success_imgView"
+        android:id="@+id/submit_failed_imgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:minWidth="100dp"
         android:minHeight="100dp"
-        android:src="@drawable/ic_success" />
+        app:srcCompat="@drawable/round_warning"
+        app:tint="#FF0000" />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/success_imgView"
+        android:layout_below="@id/submit_failed_imgView"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/submit_success_dialog_message"
-        android:textAlignment="center"
+        android:text="@string/submit_failure_dialog_message"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-
 </RelativeLayout>

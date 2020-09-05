@@ -6,8 +6,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryGrey</item>
         <item name="colorAccent">@color/gadsOrange</item>
         <!--        <item name="android:background">@drawable/plain_background</item>-->
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar">

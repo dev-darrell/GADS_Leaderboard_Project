@@ -41,6 +41,25 @@ public class MainActivity extends AppCompatActivity {
 
         submitBtn.setOnClickListener(view -> startActivity(new Intent(
                 getApplicationContext(), SubmitActivity.class)));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1) {
+                    TopSkillFragment.mSkillRecyclerView.setAdapter(TopSkillFragment.mMySkillAdapter);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void connectAndGetData() {

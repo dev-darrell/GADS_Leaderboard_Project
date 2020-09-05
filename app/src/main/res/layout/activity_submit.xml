@@ -6,16 +6,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/plain_background"
+    android:fitsSystemWindows="true"
     tools:context=".SubmitActivity">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/toolbar"
-        android:layout_width="0dp"
+    <!--    <include-->
+    <!--        android:id="@+id/include"-->
+    <!--        layout="@layout/toolbar"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="92dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#00FFFFFF"
+        android:fitsSystemWindows="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/submit_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="31dp"
+                android:adjustViewBounds="false"
+                android:maxHeight="70dp"
+                android:paddingStart="-40dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/gads_header" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <Button
         android:id="@+id/submit_form_btn"
@@ -50,7 +84,7 @@
         app:layout_constraintEnd_toStartOf="@+id/last_name_edtxt"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/screen_title_txtvw" />
+        app:layout_constraintTop_toBottomOf="@+id/screen_title_tv" />
 
     <EditText
         android:id="@+id/last_name_edtxt"
@@ -93,9 +127,9 @@
         android:hint="@string/project_link_hint"
         android:importantForAutofill="no"
         android:inputType="textUri"
+        android:padding="@dimen/edit_text_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="@dimen/edit_text_padding"
         app:layout_constraintTop_toBottomOf="@+id/email_edtxt" />
 
     <View
@@ -109,10 +143,10 @@
         android:clickable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/screen_title_txtvw"></View>
+        app:layout_constraintTop_toBottomOf="@+id/screen_title_tv" />
 
     <TextView
-        android:id="@+id/screen_title_txtvw"
+        android:id="@+id/screen_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -122,5 +156,5 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

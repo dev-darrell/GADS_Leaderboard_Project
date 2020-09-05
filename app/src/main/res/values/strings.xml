@@ -24,4 +24,5 @@
     <string name="skill_badge_description">Top Skill IQ Badge</string>
     <string name="fill_all_fields">Please fill all fields</string>
     <string name="submit_success_dialog_message">Submission Successful</string>
+    <string name="submit_failure_dialog_message">Submission Not Successful</string>
 </resources>

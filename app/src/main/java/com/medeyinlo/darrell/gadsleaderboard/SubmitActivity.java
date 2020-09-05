@@ -36,9 +36,6 @@ public class SubmitActivity extends AppCompatActivity {
     private EditText mEmailEt;
     private EditText mProjectLinkEt;
 
-//    TODO: Set up onClickListener for toolbar button to return to parent activity.
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +48,9 @@ public class SubmitActivity extends AppCompatActivity {
 
         createRetrofitClientAndApi();
 
-//        TODO: Add getWindow() code line that makes layout continue through status bar. Theme styling doesn't work.
+        setSupportActionBar(findViewById(R.id.submit_toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);
 
         submitBtn.setOnClickListener(view -> sendProjectData());
     }
@@ -70,16 +69,13 @@ public class SubmitActivity extends AppCompatActivity {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     clearAllText();
                     if (response.isSuccessful()) {
-// TODO: Remove Toasts after adding dialogs for confirmation and failure.
-                        RequestSuccessful requestSuccessful = new RequestSuccessful();
-                        requestSuccessful.show(getSupportFragmentManager(), "Success");
+                        // TODO: Remove Toasts after adding dialogs for confirmation and failure.
 
-                        Toast.makeText(SubmitActivity.this,
-                                "Google Form Filled! Response Code = " + response.code(), Toast.LENGTH_SHORT).show();
+                        new SubmitSuccess().show(getSupportFragmentManager(), "Success");
+
                     } else {
-                        Toast.makeText(SubmitActivity.this,
-                                "Error Sending Form. Response Code = " + response.code()
-                                        + " ; " + response.message(), Toast.LENGTH_SHORT).show();
+                        new SubmitFailed().show(getSupportFragmentManager(), "Failure");
+
                     }
 
                 }
@@ -87,6 +83,9 @@ public class SubmitActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
                     Log.e(TAG, "onFailure: Network request failed", t);
+
+                    new SubmitFailed().show(getSupportFragmentManager(), "RequestFailure");
+
                     Toast.makeText(SubmitActivity.this, "Network Request Failed. Error = "
                             + t.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -117,7 +116,7 @@ public class SubmitActivity extends AppCompatActivity {
     }
 
 
-    public static class RequestSuccessful extends DialogFragment {
+    public static class SubmitSuccess extends DialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -127,6 +126,18 @@ public class SubmitActivity extends AppCompatActivity {
             LayoutInflater inflater = requireActivity().getLayoutInflater();
             builder.setView(inflater.inflate(R.layout.dialog_success, null));
 
+            return builder.create();
+        }
+    }
+
+    public static class SubmitFailed extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            builder.setView(inflater.inflate(R.layout.dialog_failure, null));
             return builder.create();
         }
     }
