@@ -27,35 +27,16 @@ import retrofit2.Response;
 public class TopLearnersFragment extends Fragment {
     private static final String TAG = "TopLearnersFragment";
     public static RecyclerView mHourRecyclerView;
-
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
+    private List<HourLearner> mHourLearners;
 
     public TopLearnersFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TopLearnersFragment.
-     */
 
     public static TopLearnersFragment newInstance() {
         TopLearnersFragment fragment = new TopLearnersFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -69,19 +50,17 @@ public class TopLearnersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_learners, container, false);
-        loadRecyclerView(view);
-        loadDataFromApi();
-        return view;
-    }
 
-    private void loadDataFromApi() {
+        loadRecyclerView(view);
+
         Call<List<HourLearner>> call = MainActivity.mLeaderboardApiService.hourLearners();
 
         call.enqueue(new Callback<List<HourLearner>>() {
             @Override
             public void onResponse(Call<List<HourLearner>> call, Response<List<HourLearner>> response) {
-                List<HourLearner> hourLearners = response.body();
-                TopLearnersFragment.mHourRecyclerView.setAdapter(new HourRecyclerViewAdapter(hourLearners));
+                mHourLearners = response.body();
+                HourRecyclerViewAdapter recyclerViewAdapter = new HourRecyclerViewAdapter(mHourLearners);
+                mHourRecyclerView.setAdapter(recyclerViewAdapter);
             }
 
             @Override
@@ -89,11 +68,12 @@ public class TopLearnersFragment extends Fragment {
                 Log.e(TAG, "onFailure: " + t.toString(), t);
             }
         });
+        return view;
     }
+
 
     private void loadRecyclerView(View view) {
         mHourRecyclerView = view.findViewById(R.id.top_hours_recyclerview);
-        mHourRecyclerView.setHasFixedSize(true);
-        mHourRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mHourRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 }

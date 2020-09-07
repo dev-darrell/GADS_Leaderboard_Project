@@ -27,39 +27,24 @@ import retrofit2.Response;
 public class TopSkillFragment extends Fragment {
     private static final String TAG = "TopSkillFragment";
     public static RecyclerView mSkillRecyclerView;
-    public static SkillRecyclerViewAdapter mMySkillAdapter;
+    private List<SkillLearner> mSkillLearners = null;
+    private SkillRecyclerViewAdapter mSkillAdapter;
 
     public TopSkillFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * <p>
-     * param1 Parameter 1.
-     * param2 Parameter 2.
-     *
-     * @return A new instance of fragment TopSkillFragment.
-     */
 
     public static TopSkillFragment newInstance() {
         TopSkillFragment fragment = new TopSkillFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,19 +52,15 @@ public class TopSkillFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_skill, container, false);
         loadRecyclerViewLayout(view);
-        getDataFromApi();
-        return view;
-    }
 
-    private void getDataFromApi() {
         Call<List<SkillLearner>> skillCall = MainActivity.mLeaderboardApiService.skillLearners();
 
         skillCall.enqueue(new Callback<List<SkillLearner>>() {
             @Override
             public void onResponse(Call<List<SkillLearner>> call, Response<List<SkillLearner>> response) {
-                List<SkillLearner> skillLearners = response.body();
-                mMySkillAdapter = new SkillRecyclerViewAdapter(skillLearners);
-
+                mSkillLearners = response.body();
+                Log.d(TAG, "onResponse: Changing Adapter Values");
+                mSkillAdapter.changeDataList(mSkillLearners);
             }
 
             @Override
@@ -87,11 +68,16 @@ public class TopSkillFragment extends Fragment {
                 Log.e(TAG, "onFailure: " + t.toString(), t);
             }
         });
+
+        return view;
     }
 
     private void loadRecyclerViewLayout(View view) {
         mSkillRecyclerView = view.findViewById(R.id.recyclerview_top_skills);
+        Log.d(TAG, "loadRecyclerViewLayout: Adding Adapter");
+        mSkillAdapter = new SkillRecyclerViewAdapter(mSkillLearners);
+        mSkillRecyclerView.setAdapter(mSkillAdapter);
         mSkillRecyclerView.setHasFixedSize(true);
-        mSkillRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mSkillRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 }

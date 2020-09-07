@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.medeyinlo.darrell.gadsleaderboard.api.LeaderboardApiService;
@@ -35,6 +37,7 @@ public class SubmitActivity extends AppCompatActivity {
     private EditText mLastNameEt;
     private EditText mEmailEt;
     private EditText mProjectLinkEt;
+    private AlertDialog mConfirmDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +52,13 @@ public class SubmitActivity extends AppCompatActivity {
         createRetrofitClientAndApi();
 
         setSupportActionBar(findViewById(R.id.submit_toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);
 
-        submitBtn.setOnClickListener(view -> sendProjectData());
+        submitBtn.setOnClickListener(view -> {
+            mConfirmDialog = ConfirmSubmit();
+            mConfirmDialog.show();
+        });
     }
 
     private void sendProjectData() {
@@ -61,16 +67,14 @@ public class SubmitActivity extends AppCompatActivity {
         String email = mEmailEt.getText().toString();
         String projectLink = mProjectLinkEt.getText().toString();
 
+        clearAllText();
         if (!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !projectLink.isEmpty()) {
             Call<Void> submitCall = mApiService.submitProject(email, firstName, lastName, projectLink);
 
             submitCall.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    clearAllText();
                     if (response.isSuccessful()) {
-                        // TODO: Remove Toasts after adding dialogs for confirmation and failure.
-
                         new SubmitSuccess().show(getSupportFragmentManager(), "Success");
 
                     } else {
@@ -116,13 +120,36 @@ public class SubmitActivity extends AppCompatActivity {
     }
 
 
+    public AlertDialog ConfirmSubmit() {
+        AlertDialog alert = new AlertDialog.Builder(this).create();
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirmation, null);
+
+        Button confirmBtn = (Button) dialogView.findViewById(R.id.confirm_btn);
+        FloatingActionButton cancelFab = (FloatingActionButton) dialogView.findViewById(R.id.cancel_fab);
+
+        confirmBtn.setOnClickListener(view -> {
+            mConfirmDialog.dismiss();
+            sendProjectData();
+        });
+
+        cancelFab.setOnClickListener(view -> {
+            mConfirmDialog.dismiss();
+            clearAllText();
+        });
+
+        alert.setView(dialogView);
+
+        return alert;
+    }
+
     public static class SubmitSuccess extends DialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//      TODO: Adjust dialog layout so it creates a square dialog box; Create 2 new dialogs for confirmation and submission failure.
+
             LayoutInflater inflater = requireActivity().getLayoutInflater();
             builder.setView(inflater.inflate(R.layout.dialog_success, null));
 
@@ -138,6 +165,7 @@ public class SubmitActivity extends AppCompatActivity {
 
             LayoutInflater inflater = requireActivity().getLayoutInflater();
             builder.setView(inflater.inflate(R.layout.dialog_failure, null));
+
             return builder.create();
         }
     }

@@ -21,6 +21,13 @@ public class SkillRecyclerViewAdapter extends RecyclerView.Adapter<SkillRecycler
         mSkillLearners = skillLearners;
     }
 
+    public void changeDataList(List<SkillLearner> newSkillLearners) {
+        if (mSkillLearners != null) {
+            mSkillLearners.clear();
+        }
+        mSkillLearners = newSkillLearners;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

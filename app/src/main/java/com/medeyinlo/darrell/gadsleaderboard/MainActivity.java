@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     public static LeaderboardApiService mLeaderboardApiService;
 
 //    TODO: Debug and fix skill fragment not showing RecyclerView and items when loaded;
-//    TODO: Debug RecyclerView item list not having spacing and elevation when displayed in live app;
-//    TODO: Review launcher icon to remove white border that shows in phone app drawer.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,25 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         submitBtn.setOnClickListener(view -> startActivity(new Intent(
                 getApplicationContext(), SubmitActivity.class)));
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 1) {
-                    TopSkillFragment.mSkillRecyclerView.setAdapter(TopSkillFragment.mMySkillAdapter);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     private void connectAndGetData() {
