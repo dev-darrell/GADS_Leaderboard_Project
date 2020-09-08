@@ -16,16 +16,13 @@ public class SplashScreenActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1500);
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            try {
+                Thread.sleep(1250);
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }).start();
     }

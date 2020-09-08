@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +21,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TopSkillFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TopSkillFragment extends Fragment {
     private static final String TAG = "TopSkillFragment";
     public static RecyclerView mSkillRecyclerView;
@@ -36,8 +33,7 @@ public class TopSkillFragment extends Fragment {
 
 
     public static TopSkillFragment newInstance() {
-        TopSkillFragment fragment = new TopSkillFragment();
-        return fragment;
+        return new TopSkillFragment();
     }
 
     @Override
@@ -51,33 +47,41 @@ public class TopSkillFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_skill, container, false);
+
         loadRecyclerViewLayout(view);
+
+        loadDataList(view);
+
+        return view;
+    }
+
+    private void loadDataList(View view) {
+        ProgressBar skillProgress = view.findViewById(R.id.skill_prog_bar);
+        skillProgress.setVisibility(View.VISIBLE);
 
         Call<List<SkillLearner>> skillCall = MainActivity.mLeaderboardApiService.skillLearners();
 
         skillCall.enqueue(new Callback<List<SkillLearner>>() {
             @Override
-            public void onResponse(Call<List<SkillLearner>> call, Response<List<SkillLearner>> response) {
+            public void onResponse(@NonNull Call<List<SkillLearner>> call, @NonNull Response<List<SkillLearner>> response) {
+                skillProgress.setVisibility(View.GONE);
                 mSkillLearners = response.body();
-                Log.d(TAG, "onResponse: Changing Adapter Values");
                 mSkillAdapter.changeDataList(mSkillLearners);
             }
 
             @Override
-            public void onFailure(Call<List<SkillLearner>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<SkillLearner>> call, @NonNull Throwable t) {
+                skillProgress.setVisibility(View.GONE);
                 Log.e(TAG, "onFailure: " + t.toString(), t);
             }
         });
-
-        return view;
     }
 
     private void loadRecyclerViewLayout(View view) {
         mSkillRecyclerView = view.findViewById(R.id.recyclerview_top_skills);
-        Log.d(TAG, "loadRecyclerViewLayout: Adding Adapter");
-        mSkillAdapter = new SkillRecyclerViewAdapter(mSkillLearners);
+        mSkillRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mSkillAdapter = new SkillRecyclerViewAdapter(mSkillLearners, getContext());
         mSkillRecyclerView.setAdapter(mSkillAdapter);
-        mSkillRecyclerView.setHasFixedSize(true);
-        mSkillRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 }

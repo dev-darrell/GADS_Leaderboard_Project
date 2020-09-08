@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/top_learner_badge" />
+            android:contentDescription="@string/hour_badge_content_descrip" />
 
         <LinearLayout
             android:layout_width="0dp"

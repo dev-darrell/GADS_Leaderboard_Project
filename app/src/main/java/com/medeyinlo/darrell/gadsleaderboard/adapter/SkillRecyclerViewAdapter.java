@@ -1,8 +1,10 @@
 package com.medeyinlo.darrell.gadsleaderboard.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,15 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.medeyinlo.darrell.gadsleaderboard.R;
 import com.medeyinlo.darrell.gadsleaderboard.api.SkillLearner;
+import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.List;
 
 public class SkillRecyclerViewAdapter extends RecyclerView.Adapter<SkillRecyclerViewAdapter.ViewHolder> {
     private List<SkillLearner> mSkillLearners;
+    private Context mContext;
 
-    public SkillRecyclerViewAdapter(List<SkillLearner> skillLearners) {
+    public SkillRecyclerViewAdapter(List<SkillLearner> skillLearners, Context context) {
         mSkillLearners = skillLearners;
+        mContext = context;
     }
 
     public void changeDataList(List<SkillLearner> newSkillLearners) {
@@ -26,13 +30,13 @@ public class SkillRecyclerViewAdapter extends RecyclerView.Adapter<SkillRecycler
             mSkillLearners.clear();
         }
         mSkillLearners = newSkillLearners;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.top_skill_item_view, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.top_skill_item_view, parent, false);
         return new ViewHolder(view);
     }
 
@@ -43,13 +47,15 @@ public class SkillRecyclerViewAdapter extends RecyclerView.Adapter<SkillRecycler
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (mSkillLearners != null) {
+            return mSkillLearners.size();
+        } else return 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mLearnerName;
         private TextView mSkillDetails;
-        private TextView mBadgeImg;
+        private ImageView mBadgeImg;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,12 +65,17 @@ public class SkillRecyclerViewAdapter extends RecyclerView.Adapter<SkillRecycler
         }
 
         public void bindData(SkillLearner skillLearner) {
+
             String name = skillLearner.getName();
             String details = skillLearner.getScore() + " Skill IQ Score, " + skillLearner.getCountry();
-            URL badgeUrl = skillLearner.getBadgeUrl();
+            String badgeUrl = skillLearner.getBadgeUrl();
 
             mLearnerName.setText(name);
             mSkillDetails.setText(details);
+
+            Picasso.get()
+                    .load(badgeUrl)
+                    .into(mBadgeImg);
         }
     }
 }

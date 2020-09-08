@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.medeyinlo.darrell.gadsleaderboard.api.LeaderboardApiService;
 
 import java.util.Objects;
@@ -38,6 +37,7 @@ public class SubmitActivity extends AppCompatActivity {
     private EditText mEmailEt;
     private EditText mProjectLinkEt;
     private AlertDialog mConfirmDialog;
+    private ProgressBar mSubmitProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class SubmitActivity extends AppCompatActivity {
         mLastNameEt = findViewById(R.id.last_name_edtxt);
         mEmailEt = findViewById(R.id.email_edtxt);
         mProjectLinkEt = findViewById(R.id.project_link_edtxt);
+        mSubmitProgress = findViewById(R.id.submit_progressbar);
         Button submitBtn = findViewById(R.id.submit_form_btn);
 
         createRetrofitClientAndApi();
@@ -67,38 +68,37 @@ public class SubmitActivity extends AppCompatActivity {
         String email = mEmailEt.getText().toString();
         String projectLink = mProjectLinkEt.getText().toString();
 
-        clearAllText();
         if (!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !projectLink.isEmpty()) {
+            mSubmitProgress.setVisibility(View.VISIBLE);
             Call<Void> submitCall = mApiService.submitProject(email, firstName, lastName, projectLink);
+            clearAllText();
 
             submitCall.enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    mSubmitProgress.setVisibility(View.GONE);
                     if (response.isSuccessful()) {
-                        new SubmitSuccess().show(getSupportFragmentManager(), "Success");
+                        new SubmitSuccess().show(getSupportFragmentManager(), getString(R.string.submit_success_dialogId));
 
                     } else {
-                        new SubmitFailed().show(getSupportFragmentManager(), "Failure");
+                        new SubmitFailed().show(getSupportFragmentManager(), getString(R.string.submit_failure_dialogId));
 
                     }
 
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e(TAG, "onFailure: Network request failed", t);
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    mSubmitProgress.setVisibility(View.GONE);
+                    new SubmitFailed().show(getSupportFragmentManager(), getString(R.string.submit_failure_dialogId));
 
-                    new SubmitFailed().show(getSupportFragmentManager(), "RequestFailure");
-
-                    Toast.makeText(SubmitActivity.this, "Network Request Failed. Error = "
-                            + t.toString(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "onFailure: " + t.toString(), t);
                 }
             });
 
 
         } else {
-            Snackbar.make(Objects.requireNonNull(this.getCurrentFocus()), R.string.fill_all_fields,
-                    BaseTransientBottomBar.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.fill_all_fields, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -124,7 +124,7 @@ public class SubmitActivity extends AppCompatActivity {
         AlertDialog alert = new AlertDialog.Builder(this).create();
 
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirmation, null);
+        View dialogView = inflater.inflate(R.layout.dialog_confirmation, null);
 
         Button confirmBtn = (Button) dialogView.findViewById(R.id.confirm_btn);
         FloatingActionButton cancelFab = (FloatingActionButton) dialogView.findViewById(R.id.cancel_fab);

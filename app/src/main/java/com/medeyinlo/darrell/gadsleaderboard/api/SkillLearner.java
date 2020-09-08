@@ -2,8 +2,6 @@ package com.medeyinlo.darrell.gadsleaderboard.api;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.net.URL;
-
 public class SkillLearner {
     @SerializedName("name")
     private String name;
@@ -12,9 +10,9 @@ public class SkillLearner {
     @SerializedName("country")
     private String country;
     @SerializedName("badgeUrl")
-    private URL badgeUrl;
+    private String badgeUrl;
 
-    public SkillLearner(String name, String score, String country, URL badgeUrl) {
+    public SkillLearner(String name, String score, String country, String badgeUrl) {
         this.name = name;
         this.score = score;
         this.country = country;
@@ -45,11 +43,11 @@ public class SkillLearner {
         this.country = country;
     }
 
-    public URL getBadgeUrl() {
+    public String getBadgeUrl() {
         return badgeUrl;
     }
 
-    public void setBadgeUrl(URL badgeUrl) {
+    public void setBadgeUrl(String badgeUrl) {
         this.badgeUrl = badgeUrl;
     }
 }

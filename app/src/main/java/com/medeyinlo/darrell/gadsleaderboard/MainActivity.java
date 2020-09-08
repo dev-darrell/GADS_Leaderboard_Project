@@ -15,12 +15,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
     private static final String BASE_URL = "https://gadsapi.herokuapp.com";
     private Retrofit mRetrofit;
     public static LeaderboardApiService mLeaderboardApiService;
-
-//    TODO: Debug and fix skill fragment not showing RecyclerView and items when loaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

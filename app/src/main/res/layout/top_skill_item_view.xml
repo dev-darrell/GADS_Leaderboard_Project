@@ -19,8 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:contentDescription="@string/skill_badge_description"
-            app:srcCompat="@drawable/skill_iq_badge" />
+            android:contentDescription="@string/skill_badge_description" />
 
         <LinearLayout
             android:layout_width="0dp"

@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,15 +21,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TopLearnersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TopLearnersFragment extends Fragment {
     private static final String TAG = "TopLearnersFragment";
     public static RecyclerView mHourRecyclerView;
     private List<HourLearner> mHourLearners;
+    private HourRecyclerViewAdapter mHourAdapter;
 
     public TopLearnersFragment() {
         // Required empty public constructor
@@ -35,9 +33,8 @@ public class TopLearnersFragment extends Fragment {
 
 
     public static TopLearnersFragment newInstance() {
-        TopLearnersFragment fragment = new TopLearnersFragment();
 
-        return fragment;
+        return new TopLearnersFragment();
     }
 
     @Override
@@ -53,27 +50,38 @@ public class TopLearnersFragment extends Fragment {
 
         loadRecyclerView(view);
 
+        loadDataList(view);
+
+        return view;
+    }
+
+    private void loadDataList(View view) {
+        ProgressBar hourProgress = view.findViewById(R.id.hour_prog_bar);
+        hourProgress.setVisibility(View.VISIBLE);
         Call<List<HourLearner>> call = MainActivity.mLeaderboardApiService.hourLearners();
 
         call.enqueue(new Callback<List<HourLearner>>() {
             @Override
-            public void onResponse(Call<List<HourLearner>> call, Response<List<HourLearner>> response) {
+            public void onResponse(@NonNull Call<List<HourLearner>> call, @NonNull Response<List<HourLearner>> response) {
+                hourProgress.setVisibility(View.GONE);
                 mHourLearners = response.body();
-                HourRecyclerViewAdapter recyclerViewAdapter = new HourRecyclerViewAdapter(mHourLearners);
-                mHourRecyclerView.setAdapter(recyclerViewAdapter);
+                mHourAdapter.changeDataList(mHourLearners);
             }
 
             @Override
-            public void onFailure(Call<List<HourLearner>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<HourLearner>> call, @NonNull Throwable t) {
+                hourProgress.setVisibility(View.GONE);
                 Log.e(TAG, "onFailure: " + t.toString(), t);
             }
         });
-        return view;
     }
 
 
     private void loadRecyclerView(View view) {
         mHourRecyclerView = view.findViewById(R.id.top_hours_recyclerview);
         mHourRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mHourAdapter = new HourRecyclerViewAdapter(mHourLearners);
+        mHourRecyclerView.setAdapter(mHourAdapter);
     }
 }

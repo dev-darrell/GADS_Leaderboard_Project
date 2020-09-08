@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.medeyinlo.darrell.gadsleaderboard.R;
 import com.medeyinlo.darrell.gadsleaderboard.api.HourLearner;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,6 +20,14 @@ public class HourRecyclerViewAdapter extends RecyclerView.Adapter<HourRecyclerVi
 
     public HourRecyclerViewAdapter(List<HourLearner> hourLearners) {
         mHourLearners = hourLearners;
+    }
+
+    public void changeDataList(List<HourLearner> hourLearners) {
+        if (mHourLearners != null) {
+            mHourLearners.clear();
+        }
+        mHourLearners = hourLearners;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -36,10 +45,13 @@ public class HourRecyclerViewAdapter extends RecyclerView.Adapter<HourRecyclerVi
 
     @Override
     public int getItemCount() {
-        return mHourLearners.size();
+        if (mHourLearners != null) {
+            return mHourLearners.size();
+        } else return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mLearnerName;
         private TextView mHourDetails;
         private ImageView mImageView;
@@ -53,12 +65,15 @@ public class HourRecyclerViewAdapter extends RecyclerView.Adapter<HourRecyclerVi
 
         public void bindData(HourLearner hourLearner) {
             String name = hourLearner.getName();
-            String details = hourLearner.getHours() + " learning hours, " +
-                    hourLearner.getCountry();
-//            URL imageUrl = hourLearner.getBadgeUrl();
+            String details = hourLearner.getHours() + " learning hours, " + hourLearner.getCountry();
+            String imageUrl = hourLearner.getBadgeUrl();
 
             mLearnerName.setText(name);
             mHourDetails.setText(details);
+
+            Picasso.get()
+                    .load(imageUrl)
+                    .into(mImageView);
         }
     }
 }
